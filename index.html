@@ -1,0 +1,78 @@
+<!-- Đầu trang - Đăng ký IP -->
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thống Kê IP</title>
+  <script>
+    // Hàm lấy và ghi IP
+    async function logIP() {
+      const res = await fetch("https://api.ipify.org?format=json");
+      const data = await res.json();
+      const ip = data.ip;
+
+      // Gửi IP đến Google Apps Script
+      await fetch("https://script.google.com/macros/s/AKfycbzojrCZ3pulfbV65sO9HR5kRPRH1uhsafQ8wYA61KKLXyFbO33KsQvGDA8Az-RIWE4XyQ/exec", {
+        method: "POST",
+        body: JSON.stringify({ ip }),
+        headers: { "Content-Type": "application/json" }
+      });
+    }
+
+    // Gọi hàm logIP khi trang được tải
+    logIP();
+  </script>
+</head>
+<body>
+  <h1>Chào mừng bạn!</h1>
+  <p>IP của bạn đã được ghi lại.</p>
+  <a href="thongke.html">Xem danh sách IP</a>
+</body>
+</html>
+
+<!-- Trang thống kê - Xem danh sách IP -->
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thống Kê IP Truy Cập</title>
+  <style>
+    table { border-collapse: collapse; width: 80%; margin: 20px auto; }
+    th, td { border: 1px solid #ccc; padding: 10px; text-align: center; }
+    th { background-color: #f2f2f2; }
+  </style>
+</head>
+<body>
+  <h2 style="text-align: center;">Danh sách IP truy cập</h2>
+  <table id="ipTable">
+    <thead>
+      <tr>
+        <th>IP</th>
+        <th>Thời Gian</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    // Hàm lấy dữ liệu IP từ Google Sheets
+    async function fetchIPData() {
+      const sheetURL = "https://opensheet.elk.sh/YOUR_SHEET_ID/IP-Thong_Ke"; // Thay YOUR_SHEET_ID bằng ID của Google Sheet
+      const response = await fetch(sheetURL);
+      const data = await response.json();
+
+      const tbody = document.querySelector("#ipTable tbody");
+      data.forEach(row => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>${row.IP}</td><td>${row['Thời Gian']}</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Gọi hàm fetchIPData khi trang được tải
+    fetchIPData();
+  </script>
+</body>
+</html>
