@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Trang đăng nhập</title>
+  <script>
+    const BLOCK_STATUS_URL = "https://gist.githubusercontent.com/Anhtx1u11/GIST_ID/raw/webstatus.json"; // 👉 sửa lại link thật ở đây
+
+    async function checkBlockStatus() {
+      try {
+        const res = await fetch(BLOCK_STATUS_URL);
+        const data = await res.json();
+
+        if (data.blocked === true) {
+          document.body.innerHTML = `
+            <div style="text-align:center; margin-top: 50px;">
+              <h1>🚫 Website đã bị chặn</h1>
+              <p>Liên hệ quản trị viên để mở khóa.</p>
+            </div>
+          `;
+        }
+      } catch (e) {
+        console.error("Không kiểm tra được trạng thái block:", e);
+      }
+    }
+
+    window.onload = checkBlockStatus;
+  </script>
+</head>
+<body>
+  <h1>✅ Website đang hoạt động</h1>
+</body>
+</html>
